@@ -3,40 +3,44 @@ def rollDices():
     a = random.randrange(1,7)
     b = random.randrange(1,7)
     return a+b, a, b
-
-lucky=[7,11]
-unlucky=[2,3,12]
-goals=[4,5,6,8,9,10]
-
-validInput = False 
-firstroll = True
-print("to roll dices enter 'roll'")   
-while True:
+def printSum(roll):
+    print(f'The sum of dice is {roll[1]}+{roll[2]}={roll[0]}')
+def run(goal=None, firstroll=False):
+    validInput=False
     while not validInput:
         if input('').lower()=='roll':
             validInput=True
     roll=rollDices()
     if firstroll and (roll[0] in lucky):
-        print(f'The sum of dice is {roll[1]}+{roll[2]}={roll[0]}')
+        printSum(roll)
         print('You won!')
-        break
+        return goal, True
     elif firstroll and (roll[0] in unlucky):
-        print(f'The sum of dice is {roll[1]}+{roll[2]}={roll[0]}')
+        printSum(roll)
         print('You lose...')
-        break
+        return goal, True
     elif firstroll and (roll[0] in goals):
         goal = roll[0]
-        print(f'The sum of dice is {roll[1]}+{roll[2]}={roll[0]}')
+        printSum(roll)
         print(f'Now your goal number is {goal}')
-    elif not firstroll and roll[0]==goal:
-        print(f'The sum of dice is {roll[1]}+{roll[2]}={roll[0]}')
-        print('You won!')
-        break
+        return goal, False
     elif not firstroll and roll[0]==7:
-        print(f'The sum of dice is {roll[1]}+{roll[2]}={roll[0]}')
+        printSum(roll)
         print('You lose...')
-        break
+        return True
+    elif not firstroll and roll[0]==goal:
+        printSum(roll)
+        print('You won!')
+        return True
     else:
-        print(f'The sum of dice is {roll[1]}+{roll[2]}={roll[0]}')
-    firstroll = False
-    validInput = False
+        printSum(roll)
+        return False
+    
+lucky=[7,11]
+unlucky=[2,3,12]
+goals=[4,5,6,8,9,10]
+
+print("to roll dices enter 'roll'")
+goal, gameover=run(firstroll=True)
+while not gameover:
+    gameover=run(goal=goal)
